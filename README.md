@@ -45,7 +45,7 @@ Convertir visitas sociales en rutas claras, sin convertir esta pagina en una lan
 | TikTok | `https://www.tiktok.com/@jonathan.iasistems` |
 | YouTube | `https://www.youtube.com/@Jonathan.iasistems` |
 | LinkedIn | `https://www.linkedin.com/in/jonathan-martinez-cabeo-1b9603137/` |
-| MesaFlow | `https://app.mesaflow.es` |
+| MesaFlow | `https://mesaflow.es` |
 
 ## Deploy recomendado
 
