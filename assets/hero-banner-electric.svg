@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="520" viewBox="0 0 1600 520" role="img" aria-labelledby="title desc">
+  <title id="title">Jonathan IA Systems electric banner</title>
+  <desc id="desc">Dark electric blue banner for AI agents, CRM, WhatsApp and commercial systems.</desc>
+  <defs>
+    <radialGradient id="core" cx="56%" cy="45%" r="60%">
+      <stop offset="0%" stop-color="#0a4b7a" stop-opacity=".95"/>
+      <stop offset="42%" stop-color="#07182b" stop-opacity=".92"/>
+      <stop offset="100%" stop-color="#03060b"/>
+    </radialGradient>
+    <linearGradient id="blueLine" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0%" stop-color="#00e5ff" stop-opacity="0"/>
+      <stop offset="18%" stop-color="#00e5ff"/>
+      <stop offset="55%" stop-color="#0078ff"/>
+      <stop offset="100%" stop-color="#7dd3fc" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#10314e" stop-opacity=".76"/>
+      <stop offset="100%" stop-color="#050913" stop-opacity=".62"/>
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="520" fill="url(#core)"/>
+  <rect width="1600" height="520" fill="#02040a" opacity=".34"/>
+
+  <g opacity=".18">
+    <path d="M0 96h1600M0 196h1600M0 296h1600M0 396h1600" stroke="#dbeafe" stroke-width="1"/>
+    <path d="M120 0v520M260 0v520M400 0v520M540 0v520M680 0v520M820 0v520M960 0v520M1100 0v520M1240 0v520M1380 0v520" stroke="#dbeafe" stroke-width="1"/>
+  </g>
+
+  <g transform="translate(800 260)" fill="none" stroke="#00b8ff" filter="url(#glow)">
+    <circle r="210" stroke-opacity=".42" stroke-width="2"/>
+    <circle r="154" stroke-opacity=".28" stroke-width="1"/>
+    <circle r="96" stroke-opacity=".25" stroke-width="1"/>
+    <path d="M-302 -18C-210 -94 -98 -128 22 -114c140 16 222 94 340 58" stroke="url(#blueLine)" stroke-width="5" stroke-linecap="round"/>
+    <path d="M-420 110C-240 42 -70 30 78 75c126 38 218 30 360 -34" stroke="url(#blueLine)" stroke-width="3" stroke-linecap="round" opacity=".72"/>
+  </g>
+
+  <g opacity=".72" stroke="#00a6ff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M90 118h118l32 32h74"/>
+    <path d="M126 362h136l38-38h92"/>
+    <path d="M1282 126h132l42-42h66"/>
+    <path d="M1208 380h164l34 34h88"/>
+    <path d="M188 226h170"/>
+    <path d="M1228 242h188"/>
+  </g>
+
+  <g fill="#00d8ff" filter="url(#glow)">
+    <circle cx="240" cy="150" r="10"/>
+    <circle cx="300" cy="324" r="9"/>
+    <circle cx="1414" cy="84" r="10"/>
+    <circle cx="1406" cy="414" r="12"/>
+    <circle cx="358" cy="226" r="7"/>
+    <circle cx="1228" cy="242" r="7"/>
+  </g>
+
+  <g transform="translate(150 128)">
+    <rect width="184" height="184" rx="28" fill="url(#panel)" stroke="#38bdf8" stroke-opacity=".32"/>
+    <path d="M50 56h84v84H50z" fill="none" stroke="#38bdf8" stroke-width="8"/>
+    <path d="M50 56l42 42-42 42z" fill="#0ea5e9"/>
+    <path d="M90 94h44v46H90z" fill="#02040a"/>
+    <text x="92" y="220" text-anchor="middle" fill="#c7f4ff" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="800">voz · whatsapp · crm</text>
+  </g>
+
+  <g transform="translate(440 118)">
+    <text x="0" y="0" fill="#7dd3fc" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="900" letter-spacing="7">JONATHAN IA SYSTEMS</text>
+    <text x="0" y="78" fill="#f8fbff" font-family="Inter, Arial, sans-serif" font-size="68" font-weight="950">Agentes IA + sistemas</text>
+    <text x="0" y="144" fill="#f8fbff" font-family="Inter, Arial, sans-serif" font-size="68" font-weight="950">comerciales reales</text>
+    <text x="0" y="202" fill="#cfefff" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="800">voz ultrarrealista · WhatsApp · CRM · seguimiento</text>
+    <g transform="translate(0 242)">
+      <rect width="650" height="52" rx="26" fill="#081322" stroke="#38bdf8" stroke-opacity=".36"/>
+      <circle cx="32" cy="26" r="8" fill="#00d8ff"/>
+      <text x="56" y="35" fill="#f8fbff" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="900">Detectar. Responder. Cualificar. Medir.</text>
+    </g>
+  </g>
+
+  <g transform="translate(1210 144)">
+    <rect width="230" height="222" rx="30" fill="url(#panel)" stroke="#38bdf8" stroke-opacity=".28"/>
+    <text x="34" y="58" fill="#f8fbff" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="950">Canales</text>
+    <path d="M34 78h162" stroke="#38bdf8" stroke-opacity=".35" stroke-width="2"/>
+    <text x="34" y="120" fill="#cfefff" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="850">llamadas</text>
+    <text x="34" y="152" fill="#cfefff" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="850">DMs</text>
+    <text x="34" y="184" fill="#cfefff" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="850">reservas</text>
+    <text x="34" y="216" fill="#cfefff" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="850">leads</text>
+  </g>
+
+  <rect x="0" y="0" width="18" height="520" fill="#00d8ff"/>
+  <rect x="18" y="0" width="14" height="520" fill="#075bff"/>
+  <rect x="1568" y="0" width="14" height="520" fill="#075bff"/>
+  <rect x="1582" y="0" width="18" height="520" fill="#00d8ff"/>
+</svg>
