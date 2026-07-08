@@ -34,6 +34,7 @@ Convertir visitas sociales en rutas claras, sin convertir esta pagina en una lan
 - `script.js`: tracking local y soporte de rutas `/mapa`, `/auditoria`, `/mesaflow`.
 - `vercel.json`: rewrites y headers para Vercel.
 - `assets/hero-banner.png`: banner visual usado como fondo.
+- `assets/profile-jonathan-ai.jpg`: avatar optimizado para el bloque de perfil.
 
 ## Enlaces actuales
 

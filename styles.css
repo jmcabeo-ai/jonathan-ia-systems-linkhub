@@ -83,13 +83,14 @@ a {
   margin-bottom: 22px;
 }
 
-.brand-mark {
+.profile-avatar {
   flex: 0 0 auto;
-  width: 42px;
-  height: 42px;
-  border: 10px solid var(--cyan);
-  border-left-color: var(--orange);
-  background: rgba(5, 5, 5, 0.74);
+  width: 56px;
+  height: 56px;
+  border: 2px solid rgba(45, 212, 191, 0.56);
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
   box-shadow: 0 14px 34px rgba(0, 0, 0, 0.35);
 }
 
@@ -197,17 +198,6 @@ h1 {
   font-size: 13px;
   font-weight: 740;
   overflow-wrap: anywhere;
-}
-
-.bottom-note {
-  margin-top: 18px;
-  padding: 16px 18px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: rgba(5, 5, 5, 0.32);
-  color: var(--dim);
-  font-size: 13px;
-  font-weight: 700;
 }
 
 @media (max-width: 520px) {
