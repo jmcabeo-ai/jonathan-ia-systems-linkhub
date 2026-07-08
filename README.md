@@ -38,6 +38,12 @@ Convertir visitas sociales en rutas claras:
 
 ## Deploy recomendado
 
+Estado actual:
+
+- Repo publico GitHub: `https://github.com/jmcabeo-ai/jonathan-ia-systems-linkhub`
+- Produccion Vercel: `https://jonathan-ia-systems-linkhub.vercel.app`
+- Dominio final pendiente de DNS: `jonathan.omniagsistems.com`
+
 1. Crear repo publico en GitHub:
 
 ```text
@@ -65,6 +71,12 @@ TTL: automatico
 ```
 
 Importante: confirmar siempre el registro exacto que muestre Vercel antes de guardar DNS.
+
+Nota 2026-07-08:
+
+- El deploy en Vercel ya esta hecho.
+- Al intentar asignar `jonathan.omniagsistems.com`, Vercel devuelve falta de acceso/control del dominio.
+- Siguiente paso: crear el CNAME `jonathan -> cname.vercel-dns.com` en Hostinger y volver a ejecutar/anadir el dominio en Vercel.
 
 ## Rutas preparadas
 
