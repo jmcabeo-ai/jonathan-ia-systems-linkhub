@@ -53,7 +53,7 @@ Estado actual:
 
 - Repo publico GitHub: `https://github.com/jmcabeo-ai/jonathan-ia-systems-linkhub`
 - Produccion Vercel: `https://jonathan-ia-systems-linkhub.vercel.app`
-- Dominio final pendiente de DNS: `jonathan.omniagsistems.com`
+- Dominio final activo: `https://jonathan.omniagsistems.com`
 
 1. Crear repo publico en GitHub:
 
@@ -95,6 +95,12 @@ Nota 2026-07-08 posterior:
 - Si aparece `404 DEPLOYMENT_NOT_FOUND`, el problema ya no es el CNAME: Vercel esta recibiendo la peticion, pero el dominio no esta asignado/verificado dentro del proyecto.
 - El CLI devuelve `domain_not_owned` para `omniagsistems.com` y `jonathan.omniagsistems.com`.
 - Accion recomendada: entrar al dashboard de Vercel del equipo `jmcabeo-6684s-projects`, abrir el proyecto `jonathan-ia-systems-linkhub`, ir a Settings -> Domains, anadir `jonathan.omniagsistems.com` y copiar el TXT de verificacion que Vercel pida. Ese TXT se crea en Hostinger manteniendo el CNAME actual.
+
+Nota 2026-07-08 final:
+
+- Verificacion completada en Hostinger/Vercel.
+- `https://jonathan.omniagsistems.com` responde `200 OK` y queda como URL principal para perfiles sociales.
+- Mantener `https://jonathan-ia-systems-linkhub.vercel.app` como URL tecnica de respaldo.
 
 ## Rutas preparadas
 
