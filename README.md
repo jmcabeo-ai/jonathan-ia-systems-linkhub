@@ -1,6 +1,8 @@
 # Jonathan IA Systems - Link Hub
 
-Mini landing estatica para el enlace principal de Instagram, TikTok, YouTube y LinkedIn.
+Link hub simple para el enlace principal de Instagram, TikTok, YouTube y LinkedIn.
+
+No es la web definitiva de Jonathan, OMNIA ni MesaFlow. Su funcion es ordenar el siguiente clic de una persona que llega desde redes.
 
 ## Dominio objetivo
 
@@ -10,16 +12,24 @@ jonathan.omniagsistems.com
 
 ## Objetivo
 
-Convertir visitas sociales en rutas claras:
+Convertir visitas sociales en rutas claras, sin convertir esta pagina en una landing larga:
 
 1. Pedir auditoria / escribir `AUDITORIA`.
 2. Pedir el mapa de fugas / escribir `MAPA`.
-3. Ver sistemas por nicho, empezando por MesaFlow.
-4. Seguir el contenido en YouTube, TikTok, Instagram y LinkedIn.
+3. Ver MesaFlow como prueba/producto vertical de restaurantes.
+4. Seguir el contenido en YouTube, LinkedIn, TikTok o Instagram.
+
+## Criterio de jerarquia
+
+- `AUDITORIA` es el CTA principal.
+- `MAPA` es el lead magnet de entrada.
+- MesaFlow aparece como caso/producto, no como marca principal.
+- YouTube, LinkedIn, TikTok e Instagram son enlaces de confianza y continuidad.
+- OMNIA no se enlaza como boton principal por ahora. Vive detras como operacion, CRM y paraguas empresarial; se anadira cuando tenga sentido estrategico y una URL clara.
 
 ## Archivos
 
-- `index.html`: landing principal.
+- `index.html`: link hub principal.
 - `styles.css`: estilos responsive.
 - `script.js`: tracking local y soporte de rutas `/mapa`, `/auditoria`, `/mesaflow`.
 - `vercel.json`: rewrites y headers para Vercel.
@@ -80,7 +90,7 @@ Nota 2026-07-08:
 
 ## Rutas preparadas
 
-Estas rutas cargan la misma landing y hacen scroll a la zona correspondiente:
+Estas rutas cargan el mismo link hub y hacen scroll a la tarjeta correspondiente:
 
 ```text
 /mapa
@@ -92,4 +102,5 @@ Estas rutas cargan la misma landing y hacen scroll a la zona correspondiente:
 
 - Sustituir CTA de DM por formulario GHL cuando este definido.
 - Anadir pixel/analytics cuando se decida la herramienta de medicion.
-- Crear paginas separadas para `MAPA`, `AUDITORIA` y `MESAFLOW` si el trafico lo justifica.
+- Crear paginas separadas para `MAPA`, `AUDITORIA` y `MESAFLOW` solo si el trafico lo justifica.
+- Decidir si OMNIA tendra enlace visible cuando exista una pagina publica adecuada.
