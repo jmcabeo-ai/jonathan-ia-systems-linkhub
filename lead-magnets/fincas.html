@@ -1,0 +1,596 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mini auditoria de fugas para administradores de fincas</title>
+  <style>
+    :root {
+      --bg: #020611;
+      --panel: #07111f;
+      --panel-2: #0b1628;
+      --line: #12324c;
+      --cyan: #19f7ff;
+      --blue: #00a3ff;
+      --green: #24e6a8;
+      --amber: #ffb84d;
+      --red: #ff4d5e;
+      --text: #f4f8ff;
+      --muted: #a8b8ca;
+      --soft: #d7e8fb;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      line-height: 1.35;
+    }
+
+    .page {
+      min-height: 100vh;
+      padding: 34px;
+      background:
+        radial-gradient(circle at 10% 5%, rgba(25, 247, 255, 0.14), transparent 28%),
+        radial-gradient(circle at 90% 12%, rgba(0, 163, 255, 0.18), transparent 26%),
+        linear-gradient(135deg, var(--bg), #04101c 52%, #071321);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 34px 34px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,0.65), transparent 90%);
+      pointer-events: none;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+      max-width: 1040px;
+      margin: 0 auto;
+      padding-bottom: 40px;
+    }
+
+    .eyebrow {
+      color: var(--cyan);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 14px;
+    }
+
+    h1, h2, h3, p { margin: 0; }
+
+    h1 {
+      max-width: 840px;
+      font-size: 48px;
+      line-height: 1.02;
+      font-weight: 900;
+      margin-bottom: 18px;
+    }
+
+    h2 { font-size: 30px; line-height: 1; margin-bottom: 18px; }
+    h3 { font-size: 17px; margin-bottom: 8px; }
+
+    .lead {
+      max-width: 760px;
+      color: var(--soft);
+      font-size: 21px;
+      font-weight: 600;
+      margin-bottom: 22px;
+    }
+
+    .intro-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 18px;
+      margin-top: 20px;
+      margin-bottom: 24px;
+    }
+
+    .card {
+      border: 1px solid rgba(25, 247, 255, 0.18);
+      background: rgba(7, 17, 31, 0.82);
+      box-shadow: 0 18px 60px rgba(0, 0, 0, 0.34);
+      border-radius: 8px;
+      padding: 20px;
+    }
+
+    .card.warning { border-color: rgba(255, 77, 94, 0.35); }
+    .card.action { border-color: rgba(36, 230, 168, 0.32); }
+
+    .big-line {
+      color: var(--text);
+      font-size: 22px;
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 12px;
+    }
+
+    .muted { color: var(--muted); font-size: 15px; }
+
+    .audit-eyebrow {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 10px;
+    }
+
+    .audit-legend {
+      font-family: ui-monospace, "Courier New", monospace;
+      font-size: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .audit-list { display: flex; flex-direction: column; gap: 7px; }
+
+    .audit-row {
+      display: grid;
+      grid-template-columns: 34px 1fr 130px;
+      gap: 14px;
+      align-items: center;
+      padding: 11px 14px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.045);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      transition: border-color .2s ease;
+    }
+
+    .audit-row.answered { border-color: rgba(36, 230, 168, 0.35); }
+
+    .audit-num {
+      font-family: ui-monospace, "Courier New", monospace;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--cyan);
+    }
+
+    .audit-title { font-size: 14.5px; font-weight: 900; color: var(--text); margin-bottom: 2px; }
+    .audit-q { font-size: 12.5px; color: var(--muted); font-weight: 600; }
+
+    .audit-score { display: flex; gap: 6px; justify-content: flex-end; }
+
+    .audit-score button {
+      width: 34px;
+      height: 34px;
+      border-radius: 6px;
+      border: 1px solid rgba(25, 247, 255, 0.3);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--soft);
+      font-size: 12px;
+      font-weight: 800;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all .15s ease;
+    }
+
+    .audit-score button:hover { border-color: var(--cyan); }
+
+    .audit-score button.selected {
+      background: var(--cyan);
+      color: #021018;
+      border-color: var(--cyan);
+    }
+
+    .progress-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 18px;
+      padding: 14px 18px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .progress-bar span { color: var(--muted); font-size: 13px; font-weight: 700; }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--cyan), var(--green));
+      color: #021018;
+      border: none;
+      padding: 12px 22px;
+      border-radius: 8px;
+      font-weight: 900;
+      font-size: 14px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .btn-primary:disabled { opacity: .35; cursor: not-allowed; filter: grayscale(.4); }
+
+    .gate-form { display: flex; flex-direction: column; gap: 12px; max-width: 420px; margin-top: 14px; }
+
+    .gate-form input {
+      padding: 12px 14px;
+      border-radius: 6px;
+      border: 1px solid rgba(25, 247, 255, 0.3);
+      background: rgba(2, 6, 17, 0.6);
+      color: var(--text);
+      font-size: 14px;
+      font-family: inherit;
+    }
+
+    .gate-form input:focus { outline: none; border-color: var(--cyan); }
+
+    .gate-error { color: var(--red); font-size: 12.5px; font-weight: 700; display: none; }
+
+    .diagnosis-list { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; margin-bottom: 24px; }
+
+    .diagnosis-item {
+      padding: 14px 16px;
+      border-radius: 8px;
+      background: rgba(255, 77, 94, 0.06);
+      border: 1px solid rgba(255, 77, 94, 0.28);
+    }
+
+    .diagnosis-item .d-title { color: var(--red); font-weight: 900; font-size: 14px; margin-bottom: 4px; }
+    .diagnosis-item .d-fix { color: var(--soft); font-size: 13.5px; font-weight: 600; }
+    .diagnosis-item .d-fix b { color: var(--green); }
+
+    .score-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 6px; }
+
+    .score {
+      border-radius: 8px;
+      padding: 18px;
+      min-height: 150px;
+      background: rgba(255,255,255,0.045);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .score strong { display: block; font-size: 24px; margin-bottom: 7px; }
+    .score.good strong { color: var(--green); }
+    .score.medium strong { color: var(--amber); }
+    .score.bad strong { color: var(--red); }
+
+    .steps {
+      counter-reset: step;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .step {
+      counter-increment: step;
+      padding: 14px;
+      border-radius: 8px;
+      min-height: 128px;
+      background: rgba(7, 17, 31, 0.9);
+      border: 1px solid rgba(25, 247, 255, 0.16);
+      position: relative;
+    }
+
+    .step::before {
+      content: counter(step);
+      display: block;
+      width: 24px;
+      height: 24px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 10px;
+      border-radius: 50%;
+      background: var(--blue);
+      color: white;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .step p { color: var(--soft); font-size: 13px; font-weight: 650; }
+
+    .cta {
+      margin-top: 20px;
+      padding: 22px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(25, 247, 255, 0.12), rgba(36, 230, 168, 0.10));
+      border: 1px solid rgba(36, 230, 168, 0.34);
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: center;
+    }
+
+    .cta .word { color: var(--green); font-size: 38px; font-weight: 900; text-align: right; }
+
+    .footer {
+      left: 34px;
+      right: 34px;
+      bottom: 20px;
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      color: rgba(244, 248, 255, 0.6);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-top: 30px;
+    }
+
+    @media (max-width: 860px) {
+      .page { padding: 22px; }
+      h1 { font-size: 36px; }
+      .intro-grid, .score-grid, .steps { grid-template-columns: 1fr; }
+      .audit-row { grid-template-columns: 28px 1fr; }
+      .audit-score { grid-column: 1 / -1; justify-content: flex-start; margin-top: 6px; }
+      .cta { display: block; }
+      .cta .word { margin-top: 12px; text-align: left; }
+    }
+  </style>
+</head>
+<body>
+  <section class="page">
+    <div class="content">
+      <div class="eyebrow">Jonathan IA Systems - FINCAS</div>
+      <h1>Mini auditoria de fugas para administradores de fincas</h1>
+      <p class="lead">Puntua cada bloque y descubre en 10 minutos donde se te escapa el tiempo del equipo antes de contratar a nadie mas.</p>
+
+      <div class="intro-grid">
+        <div class="card">
+          <p class="big-line">Para administradores de fincas y gestores de comunidades.</p>
+          <p class="muted">Si tu equipo recibe llamadas y WhatsApps de vecinos preguntando incidencias, cuotas o actas, y no tienes claro cuantas son repetidas, esta auditoria es para ti.</p>
+        </div>
+        <div class="card warning">
+          <h3>La senal</h3>
+          <p class="muted">Si la mitad de las llamadas son para preguntar algo que ya esta resuelto o documentado, no tienes un problema de personal. Tienes una fuga de sistema.</p>
+        </div>
+      </div>
+
+      <div class="audit-eyebrow">
+        <h2 style="font-size: 20px; margin-bottom: 0;">Puntua cada bloque</h2>
+        <span class="audit-legend">0 = no existe &nbsp;/&nbsp; 1 = existe pero falla &nbsp;/&nbsp; 2 = claro y medido</span>
+      </div>
+
+      <div class="audit-list">
+        <div class="audit-row">
+          <div class="audit-num">01</div>
+          <div><div class="audit-title">Entrada</div><div class="audit-q">Sabes por que canal entra cada consulta: llamada, WhatsApp, email o visita a oficina?</div></div>
+          <div class="audit-score" data-block="entrada"><button type="button" data-val="0">0</button><button type="button" data-val="1">1</button><button type="button" data-val="2">2</button></div>
+        </div>
+        <div class="audit-row">
+          <div class="audit-num">02</div>
+          <div><div class="audit-title">Verificacion</div><div class="audit-q">Se comprueba que quien pregunta es vecino o propietario autorizado antes de dar datos de la comunidad?</div></div>
+          <div class="audit-score" data-block="verificacion"><button type="button" data-val="0">0</button><button type="button" data-val="1">1</button><button type="button" data-val="2">2</button></div>
+        </div>
+        <div class="audit-row">
+          <div class="audit-num">03</div>
+          <div><div class="audit-title">Registro</div><div class="audit-q">Cada incidencia queda registrada, o depende de la memoria de quien atendio la llamada?</div></div>
+          <div class="audit-score" data-block="registro"><button type="button" data-val="0">0</button><button type="button" data-val="1">1</button><button type="button" data-val="2">2</button></div>
+        </div>
+        <div class="audit-row">
+          <div class="audit-num">04</div>
+          <div><div class="audit-title">Estado</div><div class="audit-q">Sabes si una incidencia esta abierta, en curso, esperando proveedor o resuelta?</div></div>
+          <div class="audit-score" data-block="estado"><button type="button" data-val="0">0</button><button type="button" data-val="1">1</button><button type="button" data-val="2">2</button></div>
+        </div>
+        <div class="audit-row">
+          <div class="audit-num">05</div>
+          <div><div class="audit-title">Documentacion</div><div class="audit-q">Las actas y documentos de junta estan indexados y localizables por comunidad?</div></div>
+          <div class="audit-score" data-block="documentacion"><button type="button" data-val="0">0</button><button type="button" data-val="1">1</button><button type="button" data-val="2">2</button></div>
+        </div>
+        <div class="audit-row">
+          <div class="audit-num">06</div>
+          <div><div class="audit-title">Repeticion</div><div class="audit-q">Sabes cuantas llamadas de esta semana eran sobre algo que ya estaba resuelto?</div></div>
+          <div class="audit-score" data-block="repeticion"><button type="button" data-val="0">0</button><button type="button" data-val="1">1</button><button type="button" data-val="2">2</button></div>
+        </div>
+        <div class="audit-row">
+          <div class="audit-num">07</div>
+          <div><div class="audit-title">Escalado a humano</div><div class="audit-q">Hay un criterio claro de cuando una consulta pasa de autoservicio a hablar contigo?</div></div>
+          <div class="audit-score" data-block="escalado"><button type="button" data-val="0">0</button><button type="button" data-val="1">1</button><button type="button" data-val="2">2</button></div>
+        </div>
+        <div class="audit-row">
+          <div class="audit-num">08</div>
+          <div><div class="audit-title">Comunicacion proactiva</div><div class="audit-q">Los vecinos se enteran de avisos e incidencias sin tener que llamar para preguntar?</div></div>
+          <div class="audit-score" data-block="comunicacion"><button type="button" data-val="0">0</button><button type="button" data-val="1">1</button><button type="button" data-val="2">2</button></div>
+        </div>
+        <div class="audit-row">
+          <div class="audit-num">09</div>
+          <div><div class="audit-title">Morosidad</div><div class="audit-q">El seguimiento de impagos esta claro, o hay que revisar Excel a mano cada mes?</div></div>
+          <div class="audit-score" data-block="morosidad"><button type="button" data-val="0">0</button><button type="button" data-val="1">1</button><button type="button" data-val="2">2</button></div>
+        </div>
+        <div class="audit-row">
+          <div class="audit-num">10</div>
+          <div><div class="audit-title">Dashboard</div><div class="audit-q">Revisas semanalmente el volumen de consultas y el tiempo medio de respuesta por comunidad?</div></div>
+          <div class="audit-score" data-block="dashboard"><button type="button" data-val="0">0</button><button type="button" data-val="1">1</button><button type="button" data-val="2">2</button></div>
+        </div>
+      </div>
+
+      <div class="progress-bar">
+        <span id="progressText">0/10 bloques respondidos</span>
+        <button id="verResultadoBtn" class="btn-primary" disabled>Ver mi diagnostico &rarr;</button>
+      </div>
+    </div>
+    <div class="footer">
+      <span>Detecta - Puntua - Prioriza - Sistematiza</span>
+      <span>jonathan.iasistems</span>
+    </div>
+  </section>
+
+  <section class="page" id="resultPage">
+    <div class="content">
+      <div class="eyebrow">Resultado</div>
+      <h2>Ya completaste los 10 bloques</h2>
+      <p class="lead">Dejame tu email y te muestro ahora mismo la puntuacion, tus 3 puntos mas debiles y que hacer con cada uno.</p>
+
+      <div id="gateCard" class="card action gate">
+        <h3 style="font-size: 20px; margin-bottom: 8px;">Ver mi diagnostico completo</h3>
+        <p class="muted">Es gratis. Solo lo uso para mandarte el desglose y, si tiene sentido, escribirte con el primer paso concreto.</p>
+        <form id="gateForm" class="gate-form">
+          <input type="text" id="gateName" placeholder="Tu nombre" autocomplete="given-name">
+          <input type="email" id="gateEmail" placeholder="Tu mejor email" required autocomplete="email">
+          <span class="gate-error" id="gateError">Escribe un email valido para ver tu resultado.</span>
+          <button type="submit" class="btn-primary">Ver mi diagnostico &rarr;</button>
+        </form>
+      </div>
+
+      <div id="resultsContent" style="display:none;">
+        <h2 id="scoreHeadline" style="margin-top: 26px;">Tu puntuacion</h2>
+        <p class="lead">La suma de los 10 bloques te dice si el problema es de personal o de sistema.</p>
+
+        <div class="score-grid" id="scoreGrid"></div>
+
+        <div class="card warning" style="margin-top: 20px;">
+          <h3>Tus puntos mas debiles</h3>
+          <div class="diagnosis-list" id="diagnosisList"></div>
+        </div>
+
+        <div class="card action" style="margin-top: 20px;">
+          <h2>Plan base para cerrar la fuga</h2>
+          <div class="steps">
+            <div class="step"><p>Crear un canal unico de WhatsApp con verificacion de vecino antes de dar datos.</p></div>
+            <div class="step"><p>Indexar actas y documentos por comunidad para consulta rapida.</p></div>
+            <div class="step"><p>Definir estados claros para cada incidencia.</p></div>
+            <div class="step"><p>Automatizar respuestas a las preguntas repetidas: saldo, estado, proxima junta.</p></div>
+            <div class="step"><p>Dejar el escalado a humano solo para lo que de verdad lo necesita.</p></div>
+          </div>
+        </div>
+
+        <div class="cta">
+          <div>
+            <h3>Siguiente paso</h3>
+            <p class="muted" id="ctaText"></p>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:10px; align-items:flex-end;">
+            <div class="word">AUDITORIA</div>
+            <a href="https://ig.me/m/jonathan.iasistems" target="_blank" rel="noopener" class="btn-primary" style="text-decoration:none; display:inline-block;">Escribir por Instagram</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <span>Primero orden - Luego automatizacion - Despues escala</span>
+      <span>Jonathan IA Systems</span>
+    </div>
+  </section>
+
+  <script>
+    var BLOCKS = [
+      { key: 'entrada', title: 'Entrada', fix: 'Centralizo llamadas, WhatsApp y email en un canal unico con historial. Dejas de perder de vista consultas sueltas y sabes cuantas llegan de verdad cada semana.' },
+      { key: 'verificacion', title: 'Verificacion', fix: 'Verificacion automatica de vecino o propietario antes de dar cualquier dato de la comunidad. Proteges datos sensibles sin que tu equipo tenga que acordarse de preguntarlo cada vez.' },
+      { key: 'registro', title: 'Registro', fix: 'Cada incidencia queda registrada sola, no depende de la memoria de quien cogio el telefono. El seguimiento sigue igual aunque esa persona falte un dia.' },
+      { key: 'estado', title: 'Estado', fix: 'Estados claros (abierta, en curso, esperando proveedor, resuelta) visibles de un vistazo. Dejas de tener que llamar a un companero para saber en que punto esta algo.' },
+      { key: 'documentacion', title: 'Documentacion', fix: 'Actas y documentos indexados por comunidad y buscables en segundos. El equipo deja de perder 20 minutos buscando que se dijo en la ultima junta.' },
+      { key: 'repeticion', title: 'Repeticion', fix: 'Detecto que consultas se repiten (saldo, estado, proxima junta) y las convierto en respuestas automaticas. Baja el volumen de llamadas sin bajar el servicio.' },
+      { key: 'escalado', title: 'Escalado a humano', fix: 'Criterio claro de cuando pasa de autoservicio a hablar contigo. Tu equipo deja de perder tiempo en consultas que un sistema podria resolver solo.' },
+      { key: 'comunicacion', title: 'Comunicacion proactiva', fix: 'Avisos automaticos a los vecinos antes de que pregunten. Bajan las llamadas de "que ha pasado con..." porque ya lo saben de antemano.' },
+      { key: 'morosidad', title: 'Morosidad', fix: 'Seguimiento de impagos automatico, sin revisar Excel a mano cada mes. Detectas antes a quien hay que reclamar, en vez de enterarte tarde.' },
+      { key: 'dashboard', title: 'Dashboard', fix: 'Reporting semanal por comunidad: volumen de consultas y tiempo de respuesta. Decides con datos que comunidad necesita mas atencion, no por sensacion.' }
+    ];
+
+    var answers = {};
+
+    function updateProgress() {
+      var count = Object.keys(answers).length;
+      document.getElementById('progressText').textContent = count + '/10 bloques respondidos';
+      document.getElementById('verResultadoBtn').disabled = count < 10;
+    }
+
+    document.querySelectorAll('.audit-score').forEach(function (group) {
+      var block = group.getAttribute('data-block');
+      group.querySelectorAll('button').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          answers[block] = parseInt(btn.getAttribute('data-val'), 10);
+          group.querySelectorAll('button').forEach(function (b) { b.classList.remove('selected'); });
+          btn.classList.add('selected');
+          group.closest('.audit-row').classList.add('answered');
+          updateProgress();
+        });
+      });
+    });
+
+    document.getElementById('verResultadoBtn').addEventListener('click', function () {
+      document.getElementById('resultPage').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    document.getElementById('gateForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var email = document.getElementById('gateEmail').value.trim();
+      var name = document.getElementById('gateName').value.trim();
+      var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      if (!emailOk) {
+        document.getElementById('gateError').style.display = 'block';
+        return;
+      }
+      document.getElementById('gateError').style.display = 'none';
+
+      var total = 0;
+      Object.keys(answers).forEach(function (k) { total += answers[k]; });
+
+      var weakBlocks = BLOCKS.map(function (b) {
+        return { key: b.key, title: b.title, fix: b.fix, score: answers[b.key] };
+      }).sort(function (a, b) { return a.score - b.score; }).slice(0, 3);
+
+      renderResults(total, weakBlocks, name);
+
+      // TODO(GHL): conectar a un Inbound Webhook de un Workflow de GHL cuando este creado.
+      var WEBHOOK_URL = 'REEMPLAZAR_CON_URL_WEBHOOK_GHL';
+      if (WEBHOOK_URL.indexOf('REEMPLAZAR') !== 0) {
+        fetch(WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          keepalive: true,
+          body: JSON.stringify({
+            source: 'lead_magnet_fincas',
+            first_name: name,
+            email: email,
+            score_total: total,
+            answers: answers,
+            weak_blocks: weakBlocks.map(function (b) { return b.key; }),
+            ts: new Date().toISOString()
+          })
+        }).catch(function () {});
+      }
+
+      document.getElementById('gateCard').style.display = 'none';
+      document.getElementById('resultsContent').style.display = 'block';
+      document.getElementById('resultsContent').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    function renderResults(total, weakBlocks, name) {
+      var band, bandClass, bandTitle, bandCopy;
+      if (total <= 7) {
+        band = '0-7'; bandClass = 'bad'; bandTitle = 'Fuga critica';
+        bandCopy = 'La administracion depende de memoria y de que alguien coja el telefono. Esto es exactamente lo que monto: un sistema que verifica, registra y responde solo.';
+      } else if (total <= 14) {
+        band = '8-14'; bandClass = 'medium'; bandTitle = 'Sistema parcial';
+        bandCopy = 'Hay piezas, pero falta verificacion y consulta automatica. Automatizando 2-3 puntos concretos se cierra la fuga.';
+      } else {
+        band = '15-20'; bandClass = 'good'; bandTitle = 'Base solida';
+        bandCopy = 'Se puede optimizar con automatizacion y reporting por comunidad para escalar sin sumar mas gente al equipo.';
+      }
+
+      document.getElementById('scoreHeadline').textContent = (name ? name + ', tu' : 'Tu') + ' puntuacion: ' + total + '/20';
+
+      document.getElementById('scoreGrid').innerHTML =
+        '<div class="score ' + bandClass + '">' +
+          '<strong>' + band + '</strong>' +
+          '<h3>' + bandTitle + '</h3>' +
+          '<p class="muted">' + bandCopy + '</p>' +
+        '</div>';
+
+      document.getElementById('diagnosisList').innerHTML = weakBlocks.map(function (b) {
+        return '<div class="diagnosis-item">' +
+          '<div class="d-title">' + b.title + ' - puntuacion ' + b.score + '/2</div>' +
+          '<div class="d-fix"><b>Lo que resuelvo:</b> ' + b.fix + '</div>' +
+        '</div>';
+      }).join('');
+
+      document.getElementById('ctaText').innerHTML = 'Vi tu diagnostico: tu mayor fuga esta en <b style="color:var(--green)">' + weakBlocks[0].title + '</b>. Si quieres, te escribo por Instagram con el primer paso concreto para cerrarla, o me escribes tu con la palabra:';
+    }
+  </script>
+</body>
+</html>
