@@ -120,19 +120,32 @@
 
     .muted { color: var(--muted); font-size: 15px; }
 
-    .audit-eyebrow {
+    .legend-row {
       display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 10px;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
     }
 
-    .audit-legend {
-      font-family: ui-monospace, "Courier New", monospace;
-      font-size: 12px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
+    .legend-chip {
+      padding: 7px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 800;
+      border: 1px solid;
+      white-space: nowrap;
+    }
+
+    .legend-chip.bad {
+      color: var(--red);
+      border-color: rgba(255, 77, 94, 0.4);
+      background: rgba(255, 77, 94, 0.1);
+    }
+
+    .legend-chip.good {
+      color: var(--green);
+      border-color: rgba(36, 230, 168, 0.4);
+      background: rgba(36, 230, 168, 0.1);
     }
 
     .audit-list { display: flex; flex-direction: column; gap: 7px; }
@@ -380,9 +393,10 @@
 
       <p class="tap-hint">&#128070; Toca "Es fuga" o "Esta bien" en cada fila. No hace falta escribir nada.</p>
 
-      <div class="audit-eyebrow">
-        <h2 style="font-size: 20px; margin-bottom: 0;">Marca cada punto</h2>
-        <span class="audit-legend">es una fuga real, o esta bien resuelto?</span>
+      <h2 style="font-size: 20px; margin-bottom: 10px;">Marca cada punto</h2>
+      <div class="legend-row">
+        <span class="legend-chip bad">Es fuga = te falla</span>
+        <span class="legend-chip good">Esta bien = ya lo tienes resuelto</span>
       </div>
 
       <div class="audit-list">
