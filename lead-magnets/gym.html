@@ -713,13 +713,17 @@
 
       renderResults(total, weakBlocks, name);
 
-      // TODO(n8n): reemplazar por la URL real del webhook cuando el workflow este creado.
+      // TODO(GHL): reemplazar por la URL real del Inbound Webhook del Workflow de GHL.
       // Contrato esperado (ver FORMULARIOS_GHL_DIAGNOSTICO.md): el webhook hace upsert de
-      // contacto en GHL (locationId 3kP9nlvZ6ph83kiAXlda) via API REST + PIT, aplica tags
+      // contacto en GHL (locationId 3kP9nlvZ6ph83kiAXlda), aplica tags
       // IG_KEYWORD_GYM / LEAD_MAGNET_GYM_AUDITORIA / VERTICAL_GIMNASIO / DOLOR_[weak_blocks[0]],
-      // y guarda score_total + weak_blocks como campos personalizados del contacto.
-      var WEBHOOK_URL = 'REEMPLAZAR_CON_URL_WEBHOOK_N8N';
+      // y guarda score_total/banda/diagnosis_text en los custom fields lm_puntuacion/lm_banda/lm_diagnostico.
+      var WEBHOOK_URL = 'REEMPLAZAR_CON_URL_WEBHOOK_GHL';
       if (WEBHOOK_URL.indexOf('REEMPLAZAR') !== 0) {
+        var diagnosisText = weakBlocks.map(function (b) {
+          return b.title + ' (' + b.score + '/2): ' + b.fix;
+        }).join('\n\n');
+
         fetch(WEBHOOK_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -729,6 +733,8 @@
             first_name: name,
             email: email,
             score_total: total,
+            band: document.getElementById('scoreGrid').querySelector('h3').textContent,
+            diagnosis_text: diagnosisText,
             answers: answers,
             weak_blocks: weakBlocks.map(function (b) { return b.key; }),
             ts: new Date().toISOString()
