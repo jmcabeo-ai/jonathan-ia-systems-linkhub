@@ -163,26 +163,45 @@
 
     .audit-score { display: flex; gap: 6px; justify-content: flex-end; }
 
-    .audit-score button {
-      width: 34px;
-      height: 34px;
-      border-radius: 6px;
-      border: 1px solid rgba(25, 247, 255, 0.3);
-      background: rgba(255, 255, 255, 0.03);
-      color: var(--soft);
-      font-size: 12px;
+    .tap-hint {
+      color: var(--cyan);
+      font-size: 14px;
       font-weight: 800;
-      font-family: inherit;
-      cursor: pointer;
-      transition: all .15s ease;
+      margin-bottom: 14px;
     }
 
-    .audit-score button:hover { border-color: var(--cyan); }
+    .audit-score button {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      border: 1px solid rgba(25, 247, 255, 0.45);
+      background: rgba(25, 247, 255, 0.10);
+      color: var(--soft);
+      font-size: 14px;
+      font-weight: 900;
+      font-family: inherit;
+      cursor: pointer;
+      box-shadow: 0 2px 0 rgba(25, 247, 255, 0.3), 0 3px 8px rgba(0, 0, 0, 0.35);
+      transition: all .12s ease;
+    }
+
+    .audit-score button:hover {
+      border-color: var(--cyan);
+      background: rgba(25, 247, 255, 0.22);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 0 rgba(25, 247, 255, 0.3), 0 6px 12px rgba(0, 0, 0, 0.35);
+    }
+
+    .audit-score button:active {
+      transform: translateY(1px);
+      box-shadow: 0 1px 0 rgba(25, 247, 255, 0.3);
+    }
 
     .audit-score button.selected {
       background: var(--cyan);
       color: #021018;
       border-color: var(--cyan);
+      box-shadow: 0 2px 0 rgba(6, 90, 100, 0.6), 0 0 16px rgba(25, 247, 255, 0.55);
     }
 
     .progress-bar {
@@ -350,6 +369,8 @@
           <p class="muted">Si la mitad de las llamadas son para preguntar algo que ya esta resuelto o documentado, no tienes un problema de personal. Tienes una fuga de sistema.</p>
         </div>
       </div>
+
+      <p class="tap-hint">&#128070; Toca un boton (0, 1 o 2) en cada fila. No hace falta escribir nada.</p>
 
       <div class="audit-eyebrow">
         <h2 style="font-size: 20px; margin-bottom: 0;">Puntua cada bloque</h2>
