@@ -1,4 +1,5 @@
 const crypto = require("node:crypto");
+const { notify } = require("./_lib/notifications");
 
 const API_BASE = "https://services.leadconnectorhq.com";
 const TASK_TITLE = "Preparar muestra web gratuita";
@@ -160,6 +161,14 @@ module.exports = async function handler(req, res) {
           }),
         });
       }
+
+      const locationId = setting("GHL_LOCATION_ID");
+      const contactUrl = `https://app.gohighlevel.com/v2/location/${locationId}/contacts/detail/${contact.id}`;
+      await notify("demo_requested", {
+        instagram: `@${instagram}`,
+        idea: idea || "No indicó una mejora concreta.",
+        contactUrl,
+      });
     }
 
     return send(res, 200, { ok: true });
