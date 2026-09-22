@@ -60,7 +60,8 @@ module.exports = async function handler(req, res) {
   }
 
   const url = new URL(req.url, `https://${req.headers.host || "localhost"}`);
-  if (!validSecret(url.searchParams.get("key"), setting("ALERT_WEBHOOK_SECRET"))) {
+  const receivedSecret = req.headers["x-alert-key"] || url.searchParams.get("key");
+  if (!validSecret(receivedSecret, setting("ALERT_WEBHOOK_SECRET"))) {
     return send(res, 401, { ok: false });
   }
   if (Number(req.headers["content-length"] || 0) > 16384) return send(res, 413, { ok: false });
