@@ -49,6 +49,19 @@ const EVENT_DEFINITIONS = {
       ["Contacto en GHL", "contactUrl"],
     ],
   },
+  appointment_updated: {
+    title: "Cambio de cita",
+    emoji: "📅",
+    fields: [
+      ["Contacto", "contact"],
+      ["Estado", "status"],
+      ["Teléfono", "phone"],
+      ["Email", "email"],
+      ["Fecha", "startTime"],
+      ["Calendario", "calendar"],
+      ["Contacto en GHL", "contactUrl"],
+    ],
+  },
   appointment_cancelled: {
     title: "Cita cancelada",
     emoji: "❌",
