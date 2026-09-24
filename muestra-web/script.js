@@ -6,6 +6,45 @@ const form = document.querySelector("#demo-form");
 const status = document.querySelector("#form-status");
 const startedAt = Date.now();
 
+const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+if (!prefersReducedMotion && "IntersectionObserver" in window) {
+  document.body.classList.add("has-motion");
+
+  const revealTargets = document.querySelectorAll([
+    ".portfolio-intro",
+    ".portfolio-card",
+    ".systems-proof",
+    ".section-heading",
+    ".value-card",
+    ".builder-gallery",
+    ".builder-copy",
+    ".steps li",
+    ".offer-copy",
+    ".price-card",
+    ".founder-card",
+    ".founder-copy",
+    ".faq-list",
+    ".request-copy",
+    ".request-form",
+  ].join(","));
+
+  revealTargets.forEach((element, index) => {
+    element.classList.add("reveal");
+    element.style.setProperty("--reveal-delay", `${(index % 3) * 70}ms`);
+  });
+
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add("reveal-visible");
+      revealObserver.unobserve(entry.target);
+    });
+  }, { rootMargin: "0px 0px -9%", threshold: 0.08 });
+
+  revealTargets.forEach((element) => revealObserver.observe(element));
+}
+
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
